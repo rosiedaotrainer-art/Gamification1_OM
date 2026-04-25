@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OM Nướng in house - Khám Phá Gen F&B Của Bạn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Oswald"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#110c08', // Dark warm background
+                            primary: '#ea580c', // Orange 600
+                            secondary: '#dc2626', // Red 600
+                            accent: '#f59e0b', // Amber 500
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #110c08;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #f59e0b, #ea580c, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b, #ea580c, #dc2626);
+        }
+        .option-btn {
+            transition: all 0.3s ease;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(234, 88, 12, 0.5);
+            box-shadow: 0 0 15px rgba(234, 88, 12, 0.2);
+        }
+        .option-btn:active {
+            transform: translateY(0);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #110c08; }
+        ::-webkit-scrollbar-thumb { background: #3f2e24; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+        
+        .screen { display: none; }
+        .screen.active { display: flex; animation: fadeInUp 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center relative font-sans antialiased selection:bg-brand-primary selection:text-white">
+
+    <!-- Animated Background Elements (Fire/Amber vibe) -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-brand-primary/20 blur-[100px] mix-blend-screen animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[35vw] h-[35vw] rounded-full bg-brand-secondary/20 blur-[100px] mix-blend-screen animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[45vw] h-[45vw] rounded-full bg-brand-accent/10 blur-[100px] mix-blend-screen animate-blob animation-delay-4000"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="relative z-10 w-full max-w-2xl p-4 sm:p-6 md:p-8">
+        
+        <!-- HEADER -->
+        <header class="mb-8 flex justify-between items-center z-20 relative">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(234,88,12,0.5)]">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight">OM Nướng<span class="font-light text-gray-400"> in house</span></span>
+            </div>
+            <div id="progress-container" class="hidden items-center gap-3">
+                <span class="text-xs text-gray-400 font-medium tracking-widest uppercase">Mức Nhiệt</span>
+                <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full gradient-bg w-0 transition-all duration-500 ease-out"></div>
+                </div>
+                <span id="progress-text" class="text-xs text-white font-bold">0/4</span>
+            </div>
+        </header>
+
+        <!-- SCREEN 1: LANDING -->
+        <div id="screen-landing" class="screen active flex-col items-center text-center gap-6">
+            <div class="relative inline-block mb-4">
+                <div class="w-24 h-24 rounded-full p-1 gradient-bg animate-pulse-slow">
+                    <div class="w-full h-full rounded-full border-2 border-brand-dark bg-[#2d1b11] flex items-center justify-center text-4xl text-brand-accent">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-green-500 w-5 h-5 border-2 border-brand-dark rounded-full"></div>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                Bạn sinh ra cho <br>
+                <span class="gradient-text">Vị Trí Nào?</span>
+            </h1>
+            
+            <p class="text-gray-400 text-base sm:text-lg max-w-md leading-relaxed">
+                "OM Nướng không chỉ tìm nhân viên, chúng tôi tìm những mảnh ghép để tạo nên một quán nướng 'cháy' nhất. Khám phá ngay DNA F&B của bạn!" <br>
+                <span class="block mt-2 font-medium text-white/80">— Founder, OM Nướng in house</span>
+            </p>
+
+            <button onclick="startGame()" class="group relative px-8 py-4 bg-white text-brand-dark font-bold rounded-2xl text-lg hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(234,88,12,0.4)] flex items-center gap-3 mt-4">
+                Bật Bếp, Bắt Đầu!
+                <i class="fa-solid fa-fire group-hover:scale-110 transition-transform text-brand-primary"></i>
+            </button>
+            <div class="flex items-center gap-2 text-xs text-gray-500 mt-2">
+                <i class="fa-solid fa-stopwatch"></i> Chỉ tốn 60 giây test nhanh
+            </div>
+        </div>
+
+        <!-- SCREEN 2: GAME / QUIZ -->
+        <div id="screen-game" class="screen flex-col w-full">
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-accent via-brand-primary to-brand-secondary opacity-50"></div>
+                
+                <h2 id="question-text" class="text-2xl sm:text-3xl font-bold mb-8 leading-tight">
+                    Loading question...
+                </h2>
+                
+                <div id="options-container" class="flex flex-col gap-3 sm:gap-4">
+                    <!-- Options will be injected here via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: LOADING RESULT -->
+        <div id="screen-loading" class="screen flex-col items-center justify-center text-center py-20">
+            <div class="relative w-24 h-24 mb-8">
+                <svg class="animate-spin w-full h-full text-brand-primary/50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 16"></circle>
+                </svg>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 gradient-text text-2xl">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Đang nhóm lửa...</h3>
+            <p class="text-gray-400">Đang phân tích xem bạn hợp với góc nào của OM Nướng</p>
+        </div>
+
+        <!-- SCREEN 4: RESULTS -->
+        <div id="screen-result" class="screen flex-col items-center w-full">
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl w-full text-center relative overflow-hidden">
+                <div class="absolute top-[-50px] right-[-50px] text-[150px] opacity-5 text-brand-primary">
+                    <i id="result-icon-bg" class="fa-solid fa-star"></i>
+                </div>
+                
+                <p class="text-brand-accent font-bold tracking-widest uppercase text-sm mb-2">Vị trí chân ái của bạn là</p>
+                <h2 id="result-title" class="text-4xl sm:text-5xl font-extrabold mb-4 gradient-text">The Floor Master</h2>
+                
+                <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center text-2xl mx-auto mb-6 shadow-lg shadow-brand-primary/30 text-white">
+                    <i id="result-icon" class="fa-solid fa-bolt"></i>
+                </div>
+
+                <p id="result-desc" class="text-gray-300 mb-8 leading-relaxed text-sm sm:text-base">
+                    Mô tả tính cách và vị trí phù hợp...
+                </p>
+
+                <div class="glass-panel rounded-2xl p-5 mb-8 text-left border-l-4 border-brand-primary bg-white/5">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-full mt-1 border border-white/20 bg-[#2d1b11] flex items-center justify-center text-xl text-brand-accent shrink-0">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm italic text-gray-200">"Đây đúng là mảnh ghép mà OM Nướng đang tìm kiếm. Gia nhập team ngay để cùng nhau thổi bùng ngọn lửa nhé!"</p>
+                            <p class="text-xs font-bold text-brand-accent mt-2">QUẢN LÝ OM NƯỚNG</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="px-8 py-4 gradient-bg text-white font-bold rounded-xl hover:scale-105 transition-all shadow-lg shadow-brand-primary/30 flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-facebook-messenger"></i> Inbox Ứng Tuyển
+                    </a>
+                    <button onclick="location.reload()" class="px-8 py-4 glass-panel text-white font-bold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Thử lại
+                    </button>
+                </div>
+            </div>
+            
+            <p class="mt-8 text-xs text-gray-500 text-center">
+                © 2026 OM Nướng in house. Let's get fired up!
+            </p>
+        </div>
+
+    </main>
+
+    <script>
+        // Quiz Data - Customized for F&B / Restaurant environment
+        const questions = [
+            {
+                question: "Giờ cao điểm cuối tuần, khách đông nghẹt, khói nghi ngút. Bạn sẽ:",
+                options: [
+                    { text: "Quan sát tổng thể, phân luồng khách và điều phối anh em làm việc.", type: "chaostamer", icon: "fa-eye" },
+                    { text: "Tập trung cao độ tại bếp, lật thịt thoăn thoắt, ra món chuẩn bài.", type: "grillguru", icon: "fa-fire-burner" },
+                    { text: "Bay lượn giữa các bàn, tươi cười hỗ trợ khách dù mồ hôi nhễ nhại.", type: "floormaster", icon: "fa-shoe-prints" },
+                    { text: "Bật nhạc năng lượng cao, chọc cười để anh em quên đi sự mệt mỏi.", type: "vibecreator", icon: "fa-music" }
+                ]
+            },
+            {
+                question: "Một bàn khách có vẻ khó chịu vì đợi món hơi lâu. Phản xạ đầu tiên của bạn?",
+                options: [
+                    { text: "Ra tận bàn xin lỗi khách, bưng ngay đĩa đồ ăn nhẹ tặng kèm.", type: "floormaster", icon: "fa-face-smile-wink" },
+                    { text: "Lập tức chạy vào khu vực bếp hối thúc và check lại thứ tự bill.", type: "chaostamer", icon: "fa-clipboard-list" },
+                    { text: "Đảm bảo chất lượng đĩa thịt khi ra bàn phải thật hoàn hảo để bù đắp.", type: "grillguru", icon: "fa-star" },
+                    { text: "Lại gần bắt chuyện duyên dáng, kể chuyện vui để khách 'hạ hỏa'.", type: "vibecreator", icon: "fa-comments" }
+                ]
+            },
+            {
+                question: "Đồng nghiệp mới lóng ngóng làm rơi vỡ đĩa. Bạn làm gì?",
+                options: [
+                    { text: "Dọn dẹp giúp ngay lập tức, vỗ vai an ủi: 'Không sao đâu bồ ơi'.", type: "vibecreator", icon: "fa-hand-holding-heart" },
+                    { text: "Hướng dẫn lại quy trình an toàn nhanh gọn để lần sau không vấp.", type: "chaostamer", icon: "fa-chalkboard-user" },
+                    { text: "Lên tiếng trấn an khách hàng xung quanh và xin lỗi vì tiếng ồn.", type: "floormaster", icon: "fa-bullhorn" },
+                    { text: "Báo ngay vào bếp làm lại món đó với tốc độ bàn thờ.", type: "grillguru", icon: "fa-bell-concierge" }
+                ]
+            },
+            {
+                question: "Sau một ca làm việc rã rời, điều gì khiến bạn thấy 'đã' nhất?",
+                options: [
+                    { text: "Bếp và dụng cụ sạch bóng, nguyên liệu ngày mai chuẩn bị tươm tất.", type: "grillguru", icon: "fa-broom" },
+                    { text: "Cả team kéo nhau đi ăn đêm, chém gió xả stress cười rung bàn.", type: "vibecreator", icon: "fa-users" },
+                    { text: "Nhìn thấy nụ cười và nghe khách khen 'Thịt ngon quá em ơi'.", type: "floormaster", icon: "fa-heart" },
+                    { text: "Doanh thu ca vượt mốc kỷ lục, vận hành trơn tru không một lỗi.", type: "chaostamer", icon: "fa-chart-line" }
+                ]
+            }
+        ];
+
+        // Results Data - Customized Roles
+        const results = {
+            floormaster: {
+                title: "Chiến Thần Chạy Bàn",
+                subtitle: "The Floor Master (Phục vụ)",
+                desc: "Đôi chân không mỏi và nụ cười không tắt! Bạn sinh ra để mang lại trải nghiệm tuyệt vời cho thực khách. Sự nhanh nhẹn và tinh tế của bạn là vũ khí bí mật giúp OM Nướng ghi điểm tuyệt đối trong lòng khách hàng.",
+                icon: "fa-shoe-prints"
+            },
+            grillguru: {
+                title: "Bậc Thầy Bếp Lửa",
+                subtitle: "The Grill Guru (Bếp/Phụ Bếp)",
+                desc: "Bạn là linh hồn của OM Nướng! Khả năng tập trung cao độ, sự tỉ mỉ và tình yêu với ẩm thực của bạn biến những nguyên liệu thô trở thành tuyệt tác trên bàn nhậu. Bạn nói ít làm nhiều, nhưng thành quả thì luôn rực lửa.",
+                icon: "fa-fire-burner"
+            },
+            chaostamer: {
+                title: "Trùm Điều Phối",
+                subtitle: "The Chaos Tamer (Quản lý/Giám sát)",
+                desc: "Bộ não lạnh trong một môi trường rực lửa. Bạn có khả năng bao quát xuất sắc, nhạy bén xử lý tình huống và biết cách sắp xếp đội hình. Khách đông cỡ nào có bạn là mọi thứ lại vào guồng trơn tru.",
+                icon: "fa-chess-knight"
+            },
+            vibecreator: {
+                title: "Trạm Phát Năng Lượng",
+                subtitle: "The Vibe Creator (Lễ tân/Host/Chăm sóc KH)",
+                desc: "EQ cực cao và sự duyên dáng vô đối, bạn là người tạo ra 'vibe' đặc trưng cho quán. Bạn biết cách làm khách hàng vui vẻ ngay từ cửa bước vào và là liều thuốc tinh thần xua tan mệt mỏi cho anh em trong team.",
+                icon: "fa-face-laugh-beam"
+            }
+        };
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let scores = {
+            floormaster: 0,
+            grillguru: 0,
+            chaostamer: 0,
+            vibecreator: 0
+        };
+
+        // DOM Elements
+        const screens = {
+            landing: document.getElementById('screen-landing'),
+            game: document.getElementById('screen-game'),
+            loading: document.getElementById('screen-loading'),
+            result: document.getElementById('screen-result')
+        };
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        // Flow Functions
+        function switchScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.remove('active'));
+            screens[screenName].classList.add('active');
+        }
+
+        function startGame() {
+            switchScreen('game');
+            progressContainer.classList.add('flex');
+            progressContainer.classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            // Update UI with animation
+            const qText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            
+            // Reset state for animation
+            qText.style.opacity = 0;
+            optionsContainer.style.opacity = 0;
+            
+            setTimeout(() => {
+                qText.innerHTML = `<span class="text-brand-primary text-xl font-bold mr-2">Q${currentQuestionIndex + 1}.</span> ${q.question}`;
+                
+                optionsContainer.innerHTML = '';
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn glass-panel text-left p-4 sm:p-5 rounded-2xl flex items-center gap-4 text-gray-200 hover:text-white group border border-white/5';
+                    btn.onclick = () => selectOption(opt.type);
+                    btn.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-brand-primary/20 flex items-center justify-center shrink-0 transition-colors">
+                            <i class="fa-solid ${opt.icon} group-hover:text-brand-primary"></i>
+                        </div>
+                        <span class="text-sm sm:text-base font-medium">${opt.text}</span>
+                    `;
+                    optionsContainer.appendChild(btn);
+                });
+
+                // Trigger animation
+                qText.style.transition = 'opacity 0.4s ease';
+                optionsContainer.style.transition = 'opacity 0.4s ease';
+                qText.style.opacity = 1;
+                optionsContainer.style.opacity = 1;
+
+                // Update Progress
+                const progressPct = ((currentQuestionIndex) / questions.length) * 100;
+                progressBar.style.width = `${progressPct}%`;
+                progressText.innerText = `${currentQuestionIndex + 1}/${questions.length}`;
+            }, 200);
+        }
+
+        function selectOption(type) {
+            scores[type]++;
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                renderQuestion();
+            } else {
+                finishGame();
+            }
+        }
+
+        function finishGame() {
+            // Final progress bar update
+            progressBar.style.width = `100%`;
+            progressText.innerText = `4/4`;
+            
+            // Show loading screen
+            switchScreen('loading');
+            progressContainer.style.opacity = 0; // Hide progress smoothly
+
+            // Simulate processing time
+            setTimeout(() => {
+                calculateAndShowResult();
+            }, 2500);
+        }
+
+        function calculateAndShowResult() {
+            // Find max score type
+            let maxType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            
+            // If tie, fallback to floormaster
+            if(scores[maxType] === 0) maxType = 'floormaster'; 
+
+            const resultData = results[maxType];
+
+            // Update UI
+            document.getElementById('result-title').innerText = resultData.title;
+            document.getElementById('result-desc').innerText = resultData.desc;
+            document.getElementById('result-icon').className = `fa-solid ${resultData.icon}`;
+            document.getElementById('result-icon-bg').className = `fa-solid ${resultData.icon}`;
+            
+            // Update subtitle tag
+            document.querySelector('#screen-result .text-brand-accent').innerText = `KẾT QUẢ ĐỊNH VỊ: ${resultData.subtitle}`;
+
+            switchScreen('result');
+        }
+    </script>
+</body>
+</html>
